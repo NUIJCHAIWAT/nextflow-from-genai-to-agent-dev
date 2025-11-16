@@ -55,7 +55,7 @@ Now that you have deployed a model, you can use the Azure AI Foundry and Azure O
 
     > **Note**: You can also use the Azure OpenAI endpoint!
 
-3. navigate to the folder containing the chat application code files and view them:
+3. From the cloned repository, navigate to the folder containing the chat application code files and view them:
 
     ```
    cd day-1/LabFiles/chat-app/csharp
@@ -64,7 +64,7 @@ Now that you have deployed a model, you can use the Azure AI Foundry and Azure O
 
     The folder contains a .NET console project (`ChatApp.csproj`), the `Program.cs` source file, and a `.env` configuration file for application settings.
 
-4. In the cloud shell command-line pane, enter the following command to restore the NuGet packages referenced by the project:
+4. In the shell command-line pane, enter the following command to restore the NuGet packages referenced by the project:
 
     ```
    dotnet restore
@@ -80,7 +80,7 @@ Now that you have deployed a model, you can use the Azure AI Foundry and Azure O
     > <font color="red"><b>IMPORTANT</b>:</font> If you deployed your gpt-4o model in the default region for your project, you can use the <b>Azure AI Foundry project</b> or <b>Azure OpenAI</b> endpoint on the <b>Overview</b> page for your project to connect to your model. If you had insufficient quota and deployed the model to another region, on the <b>Models + Endpoints</b> page, select your model and use the <b>Target URI</b> for your model.
 
 6. In the code file, replace the **your_project_endpoint** placeholder with the appropriate endpoint for your model, and the **your_model_deployment** placeholder with the name assigned to your gpt-4o model deployment.
-7. After you've replaced the placeholders, within the code editor, use the **CTRL+S** command or **Right-click > Save** to save your changes and then use the **CTRL+Q** command or **Right-click > Quit** to close the code editor while keeping the cloud shell command line open.
+7. After you've replaced the placeholders, within the code editor, use the **CTRL+S** command to save your changes
 
 ### Write code to connect to your project and chat with your model
 
@@ -92,7 +92,7 @@ Now that you have deployed a model, you can use the Azure AI Foundry and Azure O
    code Program.cs
     ```
 
-1. Replace the contents of the file with the following code, which uses the Azure AI Projects SDK to connect to your project and the Azure OpenAI chat client to converse with your model deployment:
+2. In the code file, note the existing statements that have been added at the top of the file to import the necessary SDK namespaces. Then, find the comment Add references, and add the following code to reference the namespaces in the libraries you installed previously:
 
     ```csharp
    using System.Text;
@@ -100,158 +100,59 @@ Now that you have deployed a model, you can use the Azure AI Foundry and Azure O
    using Azure.AI.Projects;
    using Azure.Identity;
    using OpenAI.Chat;
+    ```
+3. In the **main** function, under the comment **Get configuration settings**, note that the code loads the project connection string and model deployment name values you defined in the configuration file.
 
-   const string EnvFileName = ".env";
+4. Find the comment **Initialize the project client**, and add the following code to connect to your Azure AI Foundry project:
+   
+    ```csharp
+    // Initialize the project client
+    var projectClient = new AIProjectClient(
+            new Uri(endpoint),
+            new DefaultAzureCredential(new DefaultAzureCredentialOptions
+            {
+                ExcludeEnvironmentCredential = true,
+                ExcludeManagedIdentityCredential = true
+            }));
+    ```
+5. Find the comment Get a chat client, and add the following code to create a client object for chatting with a model:
 
-   Console.Clear();
-
-   try
-   {
-       var settings = LoadSettings();
-
-       if (!settings.TryGetValue("PROJECT_ENDPOINT", out var projectEndpoint) || string.IsNullOrWhiteSpace(projectEndpoint))
-       {
-           throw new InvalidOperationException("PROJECT_ENDPOINT is missing from the .env file.");
-       }
-
-       if (!settings.TryGetValue("MODEL_DEPLOYMENT", out var modelDeployment) || string.IsNullOrWhiteSpace(modelDeployment))
-       {
-           throw new InvalidOperationException("MODEL_DEPLOYMENT is missing from the .env file.");
-       }
-
-       var projectClient = new AIProjectClient(
-           new Uri(projectEndpoint),
-           new DefaultAzureCredential(new DefaultAzureCredentialOptions
-           {
-               ExcludeEnvironmentCredential = true,
-               ExcludeManagedIdentityCredential = true
-           }));
-
-       var openAIClient = projectClient.GetOpenAIClient(apiVersion: "2024-10-21");
-       var chatClient = openAIClient.GetChatClient(modelDeployment);
-
-       var conversation = new List<ChatMessage>
-       {
-           new SystemChatMessage("You are a helpful AI assistant that answers questions.")
-       };
-
-       while (true)
-       {
-           Console.Write("Enter the prompt (or type 'quit' to exit): ");
-           var inputText = Console.ReadLine();
-
-           if (inputText is null)
-           {
-               continue;
-           }
-
-           if (string.Equals(inputText.Trim(), "quit", StringComparison.OrdinalIgnoreCase))
-           {
-               break;
-           }
-
-           if (string.IsNullOrWhiteSpace(inputText))
-           {
-               Console.WriteLine("Please enter a prompt.");
-               continue;
-           }
-
-           conversation.Add(new UserChatMessage(inputText));
-
-           var chatCompletion = await chatClient.CompleteChatAsync(
-               conversation,
-               new ChatCompletionOptions
-               {
-                   Temperature = 0.8f
-               });
-
-           var completionText = ExtractContentText(chatCompletion);
-
-           Console.WriteLine($"\nAssistant: {completionText}\n");
-
-           conversation.Add(new AssistantChatMessage(completionText));
-       }
-   }
-   catch (Exception ex)
-   {
-       Console.WriteLine(ex.Message);
-   }
-
-   static string ExtractContentText(ChatCompletion completion)
-   {
-       if (completion?.Content is null || completion.Content.Count == 0)
-       {
-           return string.Empty;
-       }
-
-       var builder = new StringBuilder();
-
-       foreach (var part in completion.Content)
-       {
-           if (!string.IsNullOrEmpty(part.Text))
-           {
-               if (builder.Length > 0)
-               {
-                   builder.AppendLine();
-               }
-
-               builder.Append(part.Text);
-           }
-       }
-
-       return builder.ToString();
-   }
-
-   static Dictionary<string, string> LoadSettings()
-   {
-       var settings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-       var envPath = ResolveEnvPath();
-
-       foreach (var line in File.ReadAllLines(envPath))
-       {
-           var trimmed = line.Trim();
-           if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("#"))
-           {
-               continue;
-           }
-
-           var separatorIndex = trimmed.IndexOf('=');
-           if (separatorIndex <= 0)
-           {
-               continue;
-           }
-
-           var key = trimmed[..separatorIndex].Trim();
-           var value = trimmed[(separatorIndex + 1)..].Trim().Trim('"');
-           settings[key] = value;
-       }
-
-       return settings;
-   }
-
-   static string ResolveEnvPath()
-   {
-       var searchPaths = new[]
-       {
-           Path.Combine(Environment.CurrentDirectory, EnvFileName),
-           Path.Combine(AppContext.BaseDirectory, EnvFileName),
-           Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", EnvFileName))
-       };
-
-       foreach (var path in searchPaths)
-       {
-           if (File.Exists(path))
-           {
-               return path;
-           }
-       }
-
-       throw new FileNotFoundException($"Configuration file '{EnvFileName}' was not found in the application directory.");
-   }
+    ```csharp
+    // Get the Azure OpenAI client and chat client for the deployment
+    var openAIClient = projectClient.GetOpenAIClient(apiVersion: "2024-10-21");
+    var chatClient = openAIClient.GetChatClient(modelDeployment);
     ```
 
-1. Use the **CTRL+S** command to save your changes to the code file and then close the editor.
+6. Find the comment **Initialize prompt with system message**, and add the following code to initialize a collection of messages with a system prompt.
+
+    ```csharp
+   // Initialize prompt with system message
+   var conversation = new List<ChatMessage>
+   {
+        new SystemChatMessage("You are a helpful AI assistant that answers questions.")
+   };       
+    ```
+7. Note that the code includes a loop to allow a user to input a prompt until they enter "quit". Then in the loop section, find the comment **Get a chat completion** and add the following code to add the user input to the prompt, retrieve the completion from your model, and add the completion to the prompt (so that you retain chat history for future iterations):
+
+    ```csharp
+    // Get a chat completion
+        conversation.Add(new UserChatMessage(inputText));
+
+        var chatCompletion = await chatClient.CompleteChatAsync(
+            conversation,
+            new ChatCompletionOptions
+            {
+                Temperature = 0.8f
+            });
+
+        var completionText = ExtractContentText(chatCompletion);
+
+        Console.WriteLine($"\nAssistant: {completionText}\n");
+
+        conversation.Add(new AssistantChatMessage(completionText));
+    ```
+
+8. Use the **CTRL+S** command to save your changes to the code file and then close the editor.
 
 ### Sign into Azure and run the app
 

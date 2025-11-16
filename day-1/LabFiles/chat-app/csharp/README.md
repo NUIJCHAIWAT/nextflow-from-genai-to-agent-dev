@@ -9,7 +9,7 @@ This console application connects to an Azure AI Foundry project and chats with 
 
 ## Configuration
 
-1. Duplicate the provided `.env` file or edit it directly.
+1. Duplicate the provided `.env.example` file (rename the copy to `.env`) or create one from scratch.
 2. Set `PROJECT_ENDPOINT` to your Azure AI Foundry project endpoint (or model-specific target URI).
 3. Set `MODEL_DEPLOYMENT` to the name of the deployed model (for example, `gpt-4o`).
 

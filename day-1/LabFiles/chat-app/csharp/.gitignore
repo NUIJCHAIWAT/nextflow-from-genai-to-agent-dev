@@ -1,0 +1,35 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and diagnostics
+*.log
+*.pidb
+*.svclog
+*.scc
+
+# Application secrets
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Rider / JetBrains
+.idea/
+*.csproj.user
+
+# Misc
+*.dbmdl
+*.opendb

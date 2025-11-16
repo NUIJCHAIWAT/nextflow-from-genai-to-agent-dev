@@ -1,3 +1,4 @@
+// Add references
 using System.Text;
 using Azure.AI.OpenAI;
 using Azure.AI.Projects;
@@ -10,21 +11,26 @@ Console.Clear();
 
 try
 {
+    // Get configuration settings
     var settings = LoadSettings();
 
-    if (!settings.TryGetValue("PROJECT_ENDPOINT", out var projectEndpoint) || string.IsNullOrWhiteSpace(projectEndpoint))
-    {
-        throw new InvalidOperationException("PROJECT_ENDPOINT is missing from the .env file.");
-    }
+    var endpoint = ResolveSetting("PROJECT_ENDPOINT", settings);
+    var modelDeployment = ResolveSetting("MODEL_DEPLOYMENT", settings);
 
-    if (!settings.TryGetValue("MODEL_DEPLOYMENT", out var modelDeployment) || string.IsNullOrWhiteSpace(modelDeployment))
+    
+    if (string.IsNullOrWhiteSpace(endpoint))
     {
-        throw new InvalidOperationException("MODEL_DEPLOYMENT is missing from the .env file.");
+        throw new InvalidOperationException("PROJECT_ENDPOINT is not configured.");
+    }
+    
+    if (string.IsNullOrWhiteSpace(modelDeployment))
+    {
+        throw new InvalidOperationException("MODEL_DEPLOYMENT is not configured.");
     }
 
     // Initialize the project client
     var projectClient = new AIProjectClient(
-        new Uri(projectEndpoint),
+        new Uri(endpoint),
         new DefaultAzureCredential(new DefaultAzureCredentialOptions
         {
             ExcludeEnvironmentCredential = true,
@@ -63,6 +69,7 @@ try
             continue;
         }
 
+        // Get a chat completion
         conversation.Add(new UserChatMessage(inputText));
 
         var chatCompletion = await chatClient.CompleteChatAsync(
@@ -109,11 +116,37 @@ static string ExtractContentText(ChatCompletion completion)
     return builder.ToString();
 }
 
+static string? ResolveSetting(string key, IReadOnlyDictionary<string, string> settings)
+{
+    var envValue = Environment.GetEnvironmentVariable(key);
+    if (!string.IsNullOrWhiteSpace(envValue))
+    {
+        return envValue;
+    }
+
+    if (settings.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value))
+    {
+        Environment.SetEnvironmentVariable(key, value);
+        return value;
+    }
+
+    return null;
+}
+
 static Dictionary<string, string> LoadSettings()
 {
     var settings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-    var envPath = ResolveEnvPath();
+    string? envPath = null;
+
+    try
+    {
+        envPath = ResolveEnvPath();
+    }
+    catch (FileNotFoundException)
+    {
+        return settings;
+    }
 
     foreach (var line in File.ReadAllLines(envPath))
     {
