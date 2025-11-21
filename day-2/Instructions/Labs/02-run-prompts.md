@@ -17,7 +17,7 @@ This exercise takes approximately **15** minutes to complete.
     ![Screenshot of Azure AI Foundry portal.](../Media/ai-foundry-home.png)
 
 1. In the home page, in the **Explore models and capabilities** section, search for the `gpt-4o` model; which we'll use in our project.
-1. In the search results, select the **gpt-4o** model to see its details, and then at the top of the page for the model, select **Use this model**.
+1. In the search results, select the **gpt-4o-mini** model to see its details, and then at the top of the page for the model, select **Use this model**.
 1. When prompted to create a project, enter a valid name for your project and expand **Advanced options**.
 1. Select **Customize** and specify the following settings for your hub:
     - **Azure AI Foundry resource**: *A valid name for your Azure AI Foundry resource*
@@ -45,21 +45,7 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
 
 ### Prepare the environment
 
-1. Open a new browser tab (keeping the Azure AI Foundry portal open in the existing tab). Then in the new tab, browse to the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`; signing in with your Azure credentials if prompted.
-
-    Close any welcome notifications to see the Azure portal home page.
-
-1. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment with no storage in your subscription.
-
-    The cloud shell provides a command-line interface in a pane at the bottom of the Azure portal. You can resize or maximize this pane to make it easier to work in.
-
-    > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, switch it to ***PowerShell***.
-
-1. In the cloud shell toolbar, in the **Settings** menu, select **Go to Classic version** (this is required to use the code editor).
-
-    **<font color="red">Ensure you've switched to the classic version of the cloud shell before continuing.</font>**
-
-1. In the cloud shell pane, enter the following commands to clone the GitHub repo containing the code files for this exercise (type the command, or copy it to the clipboard and then right-click in the command line and paste as plain text):
+1. In the Terminal, enter the following commands to clone the GitHub repo containing the code files for this exercise (type the command, or copy it to the clipboard and then right-click in the command line and paste as plain text):
 
     ```
     rm -r mslearn-ai-semantic-kernel -f
@@ -68,15 +54,9 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
 
     > **Tip**: As you paste commands into the cloudshell, the output may take up a large amount of the screen buffer. You can clear the screen by entering the `cls` command to make it easier to focus on each task.
 
-1. After the repo has been cloned, navigate to the folder containing the application code files:  
+2. After the repo has been cloned, navigate to the folder containing the application code files:  
 
     > **Note**: Follow the steps for your chosen programming language.
-
-    **Python**
-
-    ```
-    cd mslearn-ai-semantic-kernel/Labfiles/02-run-prompts/Python
-    ```
 
     **C#**
 
@@ -84,7 +64,22 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
     cd mslearn-ai-semantic-kernel/Labfiles/02-run-prompts/C-sharp
     ```
 
-1. In the cloud shell command line pane, enter the following command to install the libraries you'll use:
+    **Python**
+
+    ```
+    cd mslearn-ai-semantic-kernel/Labfiles/02-run-prompts/Python
+    ```
+
+    
+
+3. In the cloud shell command line pane, enter the following command to install the libraries you'll use:
+
+    **C#**
+
+    ```
+    dotnet add package Microsoft.SemanticKernel
+    dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
+    ```
 
     **Python**
 
@@ -94,14 +89,15 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
     pip install python-dotenv semantic-kernel[azure]
     ```
 
-    **C#**
+    
+
+4. Enter the following command to edit the configuration file that has been provided:
+
+     **C#**
 
     ```
-    dotnet add package Microsoft.SemanticKernel
-    dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
+    code appsettings.json
     ```
-
-1. Enter the following command to edit the configuration file that has been provided:
 
     **Python**
 
@@ -109,17 +105,13 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
     code .env
     ```
 
-    **C#**
-
-    ```
-    code appsettings.json
-    ```
+   
 
     The file should open in a code editor.
 
-1. In the code file, replace the **your_azure_openai_endpoint** and **your_azure_openai_key** placeholders with the Azure OpenAI endpoint and API key for your project (copied from the project **Overview** page in the Azure AI Foundry portal), and replace the **your_deployment_name** placeholder with the name you assigned to your gpt-4o model.
+5. In the code file, replace the **your_azure_openai_endpoint** and **your_azure_openai_key** placeholders with the Azure OpenAI endpoint and API key for your project (copied from the project **Overview** page in the Azure AI Foundry portal), and replace the **your_deployment_name** placeholder with the name you assigned to your gpt-4o model.
 
-1. After you replace the placeholders, in the code editor, use the **CTRL+S** command or **Right-click > Save** to save your changes and then use the **CTRL+Q** command or **Right-click > Quit** to close the code editor while keeping the cloud shell command line open.
+6. After you replace the placeholders, in the code editor, use the **CTRL+S** command or **Right-click > Save** to save your changes and then use the **CTRL+Q** command or **Right-click > Quit** to close the code editor while keeping the cloud shell command line open.
 
 Now you're ready to begin the exercise. Good luck!
 
@@ -131,19 +123,31 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
 
 1. Enter the following command to edit the code file that has been provided:
 
+     **C#**
+
+    ```
+    code Program.cs
+    ```
+
     **Python**
 
     ```
     code prompts.py
     ```
 
-    **C#**
-
-    ```
-    code Program.cs
-    ```
+   
 
 1. Add the following code under the comment **Create a kernel with Azure OpenAI chat completion**:
+
+     **C#**
+    ```c#
+    // Create a kernel with Azure OpenAI chat completion
+    var builder = Kernel.CreateBuilder();
+    builder.AddAzureOpenAIChatCompletion(deploymentName, endpoint, apiKey);
+    var kernel = builder.Build();
+    var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+    ```
+
 
     **Python**
     ```python
@@ -157,16 +161,14 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
     kernel.add_service(chat_completion)
     ```
     
-    **C#**
-    ```c#
-    // Create a kernel with Azure OpenAI chat completion
-    var builder = Kernel.CreateBuilder();
-    builder.AddAzureOpenAIChatCompletion(deploymentName, endpoint, apiKey);
-    var kernel = builder.Build();
-    var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-    ```
-
+   
 1. Add the following code under the comment **Create the chat history**
+
+     **C#**
+    ```c#
+    // Create the chat history
+    var chatHistory = new ChatHistory();
+    ```
 
     **Python**
     ```python
@@ -174,13 +176,21 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
     chat_history = ChatHistory()
     ```
 
-    **C#**
-    ```c#
-    // Create the chat history
-    var chatHistory = new ChatHistory();
-    ```
+   
 
 1. Locate the comment **Get the reply from the chat completion service** and add the following code:
+
+
+    **C#**
+    ```c#
+    // Get the reply from the chat completion service
+    ChatMessageContent reply = await chatCompletionService.GetChatMessageContentAsync(
+        chatHistory,
+        kernel: kernel
+    );
+    Console.WriteLine("Assistant: " + reply.ToString());
+    chatHistory.AddAssistantMessage(reply.ToString());
+    ```
 
     **Python**
     ```python
@@ -194,20 +204,30 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
     chat_history.add_assistant_message(str(reply))
     ```
 
-    **C#**
-    ```c#
-    // Get the reply from the chat completion service
-    ChatMessageContent reply = await chatCompletionService.GetChatMessageContentAsync(
-        chatHistory,
-        kernel: kernel
-    );
-    Console.WriteLine("Assistant: " + reply.ToString());
-    chatHistory.AddAssistantMessage(reply.ToString());
-    ```
 
     This code retrieves the reply from the LLM, outputs it to the console, and appends it to the chat history.
 
-1. Locae the comment **Create a semantic kernel prompt template** and add the following code:
+1. Locate the comment **Create a semantic kernel prompt template** and add the following code:
+
+    **C#**
+    ```c#
+    // Create a semantic kernel prompt template
+    var skTemplateFactory = new KernelPromptTemplateFactory();
+    var skPromptTemplate = skTemplateFactory.Create(new PromptTemplateConfig(
+        """
+        You are a helpful career advisor. Based on the users's skills and interest, suggest up to 5 suitable roles.
+        Return the output as JSON in the following format:
+        "Role Recommendations":
+        {
+        "recommendedRoles": [],
+        "industries": [],
+        "estimatedSalaryRange": ""
+        }
+
+        My skills are: {{$skills}}. My interests are: {{$interests}}. What are some roles that would be suitable for me?
+        """
+    ));
+    ```
 
     **Python**
     ```python
@@ -232,27 +252,21 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
     )
     ```
 
-    **C#**
+
+2. Add the following code under the comment **Render the Semantic Kernel prompt with arguments**:
+
+     **C#**
     ```c#
-    // Create a semantic kernel prompt template
-    var skTemplateFactory = new KernelPromptTemplateFactory();
-    var skPromptTemplate = skTemplateFactory.Create(new PromptTemplateConfig(
-        """
-        You are a helpful career advisor. Based on the users's skills and interest, suggest up to 5 suitable roles.
-        Return the output as JSON in the following format:
-        "Role Recommendations":
+    // Render the Semantic Kernel prompt with arguments
+    var skRenderedPrompt = await skPromptTemplate.RenderAsync(
+        kernel,
+        new KernelArguments
         {
-        "recommendedRoles": [],
-        "industries": [],
-        "estimatedSalaryRange": ""
+            ["skills"] = "Software Engineering, C#, Python, Drawing, Guitar, Dance",
+            ["interests"] = "Education, Psychology, Programming, Helping Others"
         }
-
-        My skills are: {{$skills}}. My interests are: {{$interests}}. What are some roles that would be suitable for me?
-        """
-    ));
+    );
     ```
-
-1. Add the following code under the comment **Render the Semantic Kernel prompt with arguments**:
 
     **Python**
     ```python
@@ -266,27 +280,9 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
     )
     ```
 
-    **C#**
-    ```c#
-    // Render the Semantic Kernel prompt with arguments
-    var skRenderedPrompt = await skPromptTemplate.RenderAsync(
-        kernel,
-        new KernelArguments
-        {
-            ["skills"] = "Software Engineering, C#, Python, Drawing, Guitar, Dance",
-            ["interests"] = "Education, Psychology, Programming, Helping Others"
-        }
-    );
-    ```
+   
 
-1. Add the following code under the comment **Add the prompt to the chat history and get the reply**:
-
-    **Python**
-    ```python
-    # Add the Semantic Kernel prompt to the chat history and get the reply
-    chat_history.add_user_message(sk_rendered_prompt)
-    await get_reply()
-    ```
+3. Add the following code under the comment **Add the prompt to the chat history and get the reply**:
 
     **C#**
     ```c#
@@ -295,39 +291,20 @@ Now you create a prompt template that instructs the AI to suggest suitable roles
     await GetReply();
     ```
 
+    **Python**
+    ```python
+    # Add the Semantic Kernel prompt to the chat history and get the reply
+    chat_history.add_user_message(sk_rendered_prompt)
+    await get_reply()
+    ```
+
+ 
+
 ### Create a Handlebars prompt template
 
 Now you create a prompt that identifies the user's missing skills for a role and recommends courses to close the gap. Let's get started!
 
 1. Add the following code under the comment **Create a handlebars template**
-
-    **Python**
-    ```python
-    # Create a handlebars template
-    hb_prompt_template = HandlebarsPromptTemplate(
-        prompt_template_config=PromptTemplateConfig(
-            template="""
-            <message role="system">
-            Instructions: You are a career advisor. Analyze the skill gap between 
-            the user's current skills and the requirements of the target role.
-            </message>
-            <message role="user">Target Role: {{targetRole}}</message>
-            <message role="user">Current Skills: {{currentSkills}}</message>
-
-            <message role="assistant">
-            "Skill Gap Analysis":
-            {
-                "missingSkills": [],
-                "coursesToTake": [],
-                "certificationSuggestions": []
-            }
-            </message>
-            """,
-            name="missing_skills_prompt",
-            template_format="handlebars",
-        )
-    )
-    ```
 
     **C#**
     ```c#
@@ -358,20 +335,37 @@ Now you create a prompt that identifies the user's missing skills for a role and
     );
     ```
 
-
-1. Add the following code under the comment **Render the Handlebars prompt with arguments**:
-
     **Python**
     ```python
-    # Render the Handlebars prompt with arguments
-    hb_rendered_prompt = await hb_prompt_template.render(
-        kernel,
-        KernelArguments(
-            targetRole="Game Developer",
-            currentSkills="Software Engineering, C#, Python, Drawing, Guitar, Dance"
+    # Create a handlebars template
+    hb_prompt_template = HandlebarsPromptTemplate(
+        prompt_template_config=PromptTemplateConfig(
+            template="""
+            <message role="system">
+            Instructions: You are a career advisor. Analyze the skill gap between 
+            the user's current skills and the requirements of the target role.
+            </message>
+            <message role="user">Target Role: {{targetRole}}</message>
+            <message role="user">Current Skills: {{currentSkills}}</message>
+
+            <message role="assistant">
+            "Skill Gap Analysis":
+            {
+                "missingSkills": [],
+                "coursesToTake": [],
+                "certificationSuggestions": []
+            }
+            </message>
+            """,
+            name="missing_skills_prompt",
+            template_format="handlebars",
         )
     )
     ```
+
+
+2. Add the following code under the comment **Render the Handlebars prompt with arguments**:
+
 
     **C#**
     ```c#
@@ -386,14 +380,21 @@ Now you create a prompt that identifies the user's missing skills for a role and
     );
     ```
 
-1. Add the following code under the comment **Add the Handlebars prompt to the chat history and get the reply**:
-
     **Python**
     ```python
-    # Add the Handlebars prompt to the chat history and get the reply
-    chat_history.add_user_message(hb_rendered_prompt)
-    await get_reply()
+    # Render the Handlebars prompt with arguments
+    hb_rendered_prompt = await hb_prompt_template.render(
+        kernel,
+        KernelArguments(
+            targetRole="Game Developer",
+            currentSkills="Software Engineering, C#, Python, Drawing, Guitar, Dance"
+        )
+    )
     ```
+
+
+3. Add the following code under the comment **Add the Handlebars prompt to the chat history and get the reply**:
+
 
     **C#**
     ```c#
@@ -402,16 +403,18 @@ Now you create a prompt that identifies the user's missing skills for a role and
     await GetReply();
     ```
 
+    **Python**
+    ```python
+    # Add the Handlebars prompt to the chat history and get the reply
+    chat_history.add_user_message(hb_rendered_prompt)
+    await get_reply()
+    ```
+
+
 ### Accept a follow-up prompt from the user
 
 1. Add the following code under the comment **Get a follow-up prompt from the user**:
 
-    **Python**
-    ```python
-    # Get a follow-up prompt from the user
-    print("Assistant: How can I help you?")
-    user_input = input("User: ")
-    ```
 
     **C#**
     ```c#
@@ -421,7 +424,22 @@ Now you create a prompt that identifies the user's missing skills for a role and
     string input = Console.ReadLine()!;
     ```
 
+    **Python**
+    ```python
+    # Get a follow-up prompt from the user
+    print("Assistant: How can I help you?")
+    user_input = input("User: ")
+    ```
+
+
 1. Add the following code under the comment **Add the user input to the chat history and get the reply**:
+
+      **C#**
+    ```c#
+    // Add the user input to the chat history and get the reply
+    chatHistory.AddUserMessage(input);
+    await GetReply();
+    ```
 
     **Python**
     ```python
@@ -430,26 +448,23 @@ Now you create a prompt that identifies the user's missing skills for a role and
     await get_reply()
     ```
 
-    **C#**
-    ```c#
-    // Add the user input to the chat history and get the reply
-    chatHistory.AddUserMessage(input);
-    await GetReply();
-    ```
+  
 
 1. After you've updated the code, use the **CTRL+S** command to save your changes.
 
-1. In the cloud shell command-line pane beneath the code editor, enter the following command to run the code:
+2. In the Terminal, enter the following command to run the code:
+
+     **C#**
+    ```
+    dotnet run
+    ```
 
      **Python**
     ```
     python prompts.py
     ```
 
-    **C#**
-    ```
-    dotnet run
-    ```
+   
 
     You should see output similar to the following:
 
