@@ -17,7 +17,7 @@ This exercise takes approximately **15** minutes to complete.
     ![Screenshot of Azure AI Foundry portal.](../Media/ai-foundry-home.png)
 
 1. In the home page, in the **Explore models and capabilities** section, search for the `gpt-4o` model; which we'll use in our project.
-1. In the search results, select the **gpt-4o** model to see its details, and then at the top of the page for the model, select **Use this model**.
+1. In the search results, select the **gpt-4o-mini** model to see its details, and then at the top of the page for the model, select **Use this model**.
 1. When prompted to create a project, enter a valid name for your project and expand **Advanced options**.
 1. Select **Customize** and specify the following settings for your hub:
     - **Azure AI Foundry resource**: *A valid name for your Azure AI Foundry resource*
@@ -45,21 +45,7 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
 
 ### Prepare the environment
 
-1. Open a new browser tab (keeping the Azure AI Foundry portal open in the existing tab). Then in the new tab, browse to the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`; signing in with your Azure credentials if prompted.
-
-    Close any welcome notifications to see the Azure portal home page.
-
-1. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment with no storage in your subscription.
-
-    The cloud shell provides a command-line interface in a pane at the bottom of the Azure portal. You can resize or maximize this pane to make it easier to work in.
-
-    > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, switch it to ***PowerShell***.
-
-1. In the cloud shell toolbar, in the **Settings** menu, select **Go to Classic version** (this is required to use the code editor).
-
-    **<font color="red">Ensure you've switched to the classic version of the cloud shell before continuing.</font>**
-
-1. In the cloud shell pane, enter the following commands to clone the GitHub repo containing the code files for this exercise (type the command, or copy it to the clipboard and then right-click in the command line and paste as plain text):
+1. In the, enter the following commands to clone the GitHub repo containing the code files for this exercise (type the command, or copy it to the clipboard and then right-click in the command line and paste as plain text):
 
     ```
     rm -r mslearn-ai-semantic-kernel -f
@@ -72,19 +58,27 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
 
     > **Note**: Follow the steps for your chosen programming language.
 
-    **Python**
-
-    ```
-    cd mslearn-ai-semantic-kernel/Labfiles/03-create-plugins/Python
-    ```
-
     **C#**
 
     ```
     cd mslearn-ai-semantic-kernel/Labfiles/03-create-plugins/C-sharp
     ```
 
-1. In the cloud shell command line pane, enter the following command to install the libraries you'll use:
+
+    **Python**
+
+    ```
+    cd mslearn-ai-semantic-kernel/Labfiles/03-create-plugins/Python
+    ```
+
+
+2. In the cloud shell command line pane, enter the following command to install the libraries you'll use:
+
+      **C#**
+
+    ```
+    dotnet add package Microsoft.SemanticKernel
+    ```
 
     **Python**
 
@@ -94,19 +88,8 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
     pip install python-dotenv semantic-kernel[azure]
     ```
 
-    **C#**
 
-    ```
-    dotnet add package Microsoft.SemanticKernel
-    ```
-
-1. Enter the following command to edit the configuration file that has been provided:
-
-    **Python**
-
-    ```
-    code .env
-    ```
+3. Enter the following command to edit the configuration file that has been provided:
 
     **C#**
 
@@ -114,11 +97,19 @@ Now that you deployed a model, you're ready to create a Semantic Kernel client a
     code appsettings.json
     ```
 
+
+    **Python**
+
+    ```
+    code .env
+    ```
+
+    
     The file should open in a code editor.
 
-1. In the code file, replace the **your_azure_openai_endpoint** and **your_azure_openai_key** placeholders with the Azure OpenAI endpoint and API key for your project (copied from the project **Overview** page in the Azure AI Foundry portal), and replace the **your_deployment_name** placeholder with the name you assigned to your gpt-4o model.
+4. In the code file, replace the **your_azure_openai_endpoint** and **your_azure_openai_key** placeholders with the Azure OpenAI endpoint and API key for your project (copied from the project **Overview** page in the Azure AI Foundry portal), and replace the **your_deployment_name** placeholder with the name you assigned to your gpt-4o model.
 
-1. After you replace the placeholders, in the code editor, use the **CTRL+S** command or **Right-click > Save** to save your changes and then use the **CTRL+Q** command or **Right-click > Quit** to close the code editor while keeping the cloud shell command line open.
+5. After you replace the placeholders, in the code editor, use the **CTRL+S** command.
 
 Now you're ready to begin the exercise. Good luck!
 
@@ -130,28 +121,22 @@ Now you create a plugin class for your travel assistant. The class includes func
 
 1. Enter the following command to edit the code file that has been provided:
 
-    **Python**
-
-    ```
-    code flight_booking_plugin.py
-    ```
-
     **C#**
 
     ```
     code FlightBookingPlugin.cs
     ```
 
-1. Add the following code under the comment **Create a plugin function with kernel function attributes**:
 
     **Python**
-    ```python
-    # Create a plugin function with kernel function attributes
-    @kernel_function(description="Searches for available flights based on the destination and departure date in the format YYYY-MM-DD")
-    def search_flights(self, destination, departure_date):
-        # Filter flights based on destination
+
     ```
+    code flight_booking_plugin.py
+    ```
+
     
+1. Add the following code under the comment **Create a plugin function with kernel function attributes**:
+
     **C#**
     ```c#
     // Create a plugin function with kernel function attributes
@@ -164,9 +149,27 @@ Now you create a plugin class for your travel assistant. The class includes func
     }
     ```
 
+    **Python**
+    ```python
+    # Create a plugin function with kernel function attributes
+    @kernel_function(description="Searches for available flights based on the destination and departure date in the format YYYY-MM-DD")
+    def search_flights(self, destination, departure_date):
+        # Filter flights based on destination
+    ```
+    
+    
+
     The kernel function decorators help the AI understand how to call your function.
 
 1. Add the following code under the comment **Filter flights based on destination**
+
+    **C#**
+    ```c#
+    // Filter flights based on destination
+    return flights.Where(flight =>
+        flight.Destination.Equals(destination, StringComparison.OrdinalIgnoreCase) &&
+        flight.DepartureDate.Equals(departureDate)).ToList();
+    ```
 
     **Python**
     ```python
@@ -178,23 +181,10 @@ Now you create a plugin class for your travel assistant. The class includes func
     return matching_flights
     ```
 
-    **C#**
-    ```c#
-    // Filter flights based on destination
-    return flights.Where(flight =>
-        flight.Destination.Equals(destination, StringComparison.OrdinalIgnoreCase) &&
-        flight.DepartureDate.Equals(departureDate)).ToList();
-    ```
+    
 
 1. Add the following code under the comment **Create a kernel function to book flights**:
 
-    **Python**
-    ```python
-    # Create a kernel function to book flights
-    @kernel_function(description="Books a flight based on the flight ID provided")
-    def book_flight(self, flight_id):
-        # Add logic to book a flight
-    ```
 
     **C#**
     ```c#
@@ -208,28 +198,16 @@ Now you create a plugin class for your travel assistant. The class includes func
     }
     ```
 
-1. Add the following code under the comment **Add logic to book a flight**:
-
     **Python**
     ```python
-    # Add logic to book a flight
-    flight = next((f for f in self.flights if f.Id == flight_id), None)
-    
-    if flight is None:
-        return "Flight not found. Please provide a valid flight ID."
-
-    if flight.IsBooked:
-        return "You've already booked this flight."
-
-    flight.IsBooked = True
-    self.save_flights_to_file()
-
-    return (
-        f"Flight booked successfully! Airline: {flight.Airline}, "
-        f"Destination: {flight.Destination}, Departure: {flight.DepartureDate}, "
-        f"Price: ${flight.Price}."
-    )
+    # Create a kernel function to book flights
+    @kernel_function(description="Books a flight based on the flight ID provided")
+    def book_flight(self, flight_id):
+        # Add logic to book a flight
     ```
+
+
+1. Add the following code under the comment **Add logic to book a flight**:
 
     **C#**
     ```c#
@@ -255,19 +233,50 @@ Now you create a plugin class for your travel assistant. The class includes func
     ```
 
 
+    **Python**
+    ```python
+    # Add logic to book a flight
+    flight = next((f for f in self.flights if f.Id == flight_id), None)
+    
+    if flight is None:
+        return "Flight not found. Please provide a valid flight ID."
+
+    if flight.IsBooked:
+        return "You've already booked this flight."
+
+    flight.IsBooked = True
+    self.save_flights_to_file()
+
+    return (
+        f"Flight booked successfully! Airline: {flight.Airline}, "
+        f"Destination: {flight.Destination}, Departure: {flight.DepartureDate}, "
+        f"Price: ${flight.Price}."
+    )
+    ```
+
+    
+
 1. Enter the following command to edit the code file that has been provided:
 
-    **Python**
-    ```
-    code plugins.py
-    ```
 
     **C#**
     ```
     code Program.cs
     ```
 
+    **Python**
+    ```
+    code plugins.py
+    ```
+
+
 1. Add the following code under the comment **Add a plugin to the kernel**:
+
+     **C#**
+    ```c#
+    // Add a plugin to the kernel*
+    kernel.Plugins.AddFromType<FlightBookingPlugin>("FlightBookingPlugin");
+    ```
 
     **Python**
     ```python
@@ -275,21 +284,9 @@ Now you create a plugin class for your travel assistant. The class includes func
     kernel.add_plugin(FlightBookingPlugin(), "flight_booking_plugin")
     ```
 
-    **C#**
-    ```c#
-    // Add a plugin to the kernel*
-    kernel.Plugins.AddFromType<FlightBookingPlugin>("FlightBookingPlugin");
-    ```
+   
 
 1. Add the following code under the comment **Configure function choice behavior**
-
-    **Python**
-    ```python
-    # Configure function choice behavior
-    settings = AzureChatPromptExecutionSettings(
-        function_choice_behavior=FunctionChoiceBehavior.Auto(),
-    )
-    ```
 
     **C#**
     ```c#
@@ -300,19 +297,30 @@ Now you create a plugin class for your travel assistant. The class includes func
     };
     ```
 
-1. After you've updated the code, use the **CTRL+S** command to save your changes.
+    **Python**
+    ```python
+    # Configure function choice behavior
+    settings = AzureChatPromptExecutionSettings(
+        function_choice_behavior=FunctionChoiceBehavior.Auto(),
+    )
+    ```
 
-1. In the cloud shell command-line pane beneath the code editor, enter the following command to run the code:
+
+2. After you've updated the code, use the **CTRL+S** command to save your changes.
+
+3. In the cloud shell command-line pane beneath the code editor, enter the following command to run the code:
+
+
+    **C#**
+    ```
+    dotnet run
+    ```
 
      **Python**
     ```
     python plugins.py
     ```
 
-    **C#**
-    ```
-    dotnet run
-    ```
 
     You should see output similar to the following:
 
@@ -326,7 +334,7 @@ Now you create a plugin class for your travel assistant. The class includes func
     Would you like to book this flight?
     ```
 
-1. Enter "Yes" to invoke the `BookFlight` function
+4. Enter "Yes" to invoke the `BookFlight` function
 
     You should see output similar to the following:
 
@@ -344,14 +352,6 @@ Now you configure your kernel so that only selected functions are available to a
 
 1. Update the code under the comment **Configure function choice behavior** to the following code:
 
-    **Python**
-    ```python
-        # Configure function choice behavior
-        settings=AzureChatPromptExecutionSettings(
-            function_choice_behavior=FunctionChoiceBehavior.Auto(filters={"included_functions": ["search_flights"]}),
-        )
-    ```
-
     **C#**
     ```c#
     // Configure function choice behavior
@@ -363,6 +363,16 @@ Now you configure your kernel so that only selected functions are available to a
     };
     ```
 
+
+    **Python**
+    ```python
+        # Configure function choice behavior
+        settings=AzureChatPromptExecutionSettings(
+            function_choice_behavior=FunctionChoiceBehavior.Auto(filters={"included_functions": ["search_flights"]}),
+        )
+    ```
+
+    
 1. After you've updated the code, use the **CTRL+S** command to save your changes.
 
 1. Run the code as is to observe the difference in behavior.
