@@ -178,7 +178,21 @@ Now that you deployed a model, you can use the Semantic Kernel SDK to create a c
 
 1. Use the **CTRL+Q** command to close the code editor.
 
-1. Run the code using the following command:
+### Sign into Azure and run the app
+
+1. In the Terminal, enter the following command to sign into Azure.
+
+    ```
+    az login --use-device-code
+    ```
+
+    **<font color="red">You must sign into Azure - even though the cloud shell session is already authenticated.</font>**
+
+    > **Note**: In most scenarios, just using *az login* will be sufficient. However, if you have subscriptions in multiple tenants, you may need to specify the tenant by using the *--tenant* parameter. See [Sign into Azure interactively using the Azure CLI](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively) for details.
+    
+1. When prompted, follow the instructions to open the sign-in page in a new tab and enter the authentication code provided and your Azure credentials. Then complete the sign in process in the command line, selecting the subscription containing your Azure AI Foundry hub if prompted.
+
+2. Run the code using the following command:
 
    
     **C#**
@@ -190,7 +204,7 @@ Now that you deployed a model, you can use the Semantic Kernel SDK to create a c
     python kernel.py
     ```
 
-1. Check that you see a response similar to the following:
+3. Check that you see a response similar to the following:
 
     ```output
     Certainly! Here's a list of popular breakfast foods that incorporate eggs and cheese:

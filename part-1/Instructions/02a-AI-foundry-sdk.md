@@ -155,10 +155,10 @@ Now that you have deployed a model, you can use the Azure AI Foundry and Azure O
 
 ### Sign into Azure and run the app
 
-1. In the cloud shell command-line pane, enter the following command to sign into Azure.
+1. In the Terminal, enter the following command to sign into Azure.
 
     ```
-   az login
+    az login --use-device-code
     ```
 
     **<font color="red">You must sign into Azure - even though the cloud shell session is already authenticated.</font>**
