@@ -1,6 +1,10 @@
 
 # Developing AI Application & Agent solution with Semantics Kernel
 
+1. [Presentation](https://nextflowth-my.sharepoint.com/:b:/g/personal/teerasej_nextflowth_onmicrosoft_com/IQDbaheXkSwTTpOA2ALkCFU-Aa8jc7gpUDHV9RV1u2Sr0Hg?e=UldXIu)
+2. [Azure Account Setup](https://nextflowth-my.sharepoint.com/:x:/g/personal/teerasej_nextflowth_onmicrosoft_com/IQDuy-QEeewwSrFh-IjYCyQVAVarcwbtd4GivKe05vS4REs?e=mQNcvv)
+
+
 ## Part 1
 
 1. ✅ [Explore model catalog, create and deploy an AI project](part-1/Instructions/02-Explore-model-catalog.md)
