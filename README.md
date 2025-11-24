@@ -3,7 +3,7 @@
 
 1. [Presentation](https://nextflowth-my.sharepoint.com/:b:/g/personal/teerasej_nextflowth_onmicrosoft_com/IQDbaheXkSwTTpOA2ALkCFU-Aa8jc7gpUDHV9RV1u2Sr0Hg?e=UldXIu)
 2. [Azure Account Setup](https://nextflowth-my.sharepoint.com/:x:/g/personal/teerasej_nextflowth_onmicrosoft_com/IQDuy-QEeewwSrFh-IjYCyQVAVarcwbtd4GivKe05vS4REs?e=mQNcvv)
-
+3. Try sign in with your Azure account in [Microsoft Foundry](https://ai.azure.com)
 
 ## Part 1
 
