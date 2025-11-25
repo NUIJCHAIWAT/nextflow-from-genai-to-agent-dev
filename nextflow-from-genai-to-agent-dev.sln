@@ -2,37 +2,37 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "day-2", "day-2", "{9DAC67E1-E743-668A-B739-6B91816EFBBC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "part-2", "part-2", "{9DAC67E1-E743-668A-B739-6B91816EFBBC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "day-1", "day-1", "{47A7A39B-9370-D5FD-F9AD-CA24BD29E9BD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "part-1", "part-1", "{47A7A39B-9370-D5FD-F9AD-CA24BD29E9BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Labfiles", "Labfiles", "{F4D1BE33-3670-E102-73E0-4D5F62EF0ABB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-ai-assistant", "05-ai-assistant", "{DAB67588-1099-D7BA-C487-A91D1B16B92B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "new-sk-labs", "day-2\Labfiles\05-ai-assistant\c-sharp\new-sk-labs.csproj", "{0BBAFA3C-1D20-9264-3D16-8A44AA0E77CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "new-sk-labs", "part-2\Labfiles\05-ai-assistant\c-sharp\new-sk-labs.csproj", "{0BBAFA3C-1D20-9264-3D16-8A44AA0E77CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-create-plugins", "03-create-plugins", "{F4F4CBA8-25F9-903B-514A-7940481F468B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "day-2\Labfiles\03-create-plugins\C-sharp\Plugins.csproj", "{63ABAFB2-8ED7-EA8B-D973-E862AEA7663A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "part-2\Labfiles\03-create-plugins\C-sharp\Plugins.csproj", "{63ABAFB2-8ED7-EA8B-D973-E862AEA7663A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-apply-function-filters", "04-apply-function-filters", "{92A7344C-86DD-D7BC-3618-EC91D346C11E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Filters", "day-2\Labfiles\04-apply-function-filters\C-sharp\Filters.csproj", "{021894BE-7C9E-0D78-3918-9798DE2F36FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Filters", "part-2\Labfiles\04-apply-function-filters\C-sharp\Filters.csproj", "{021894BE-7C9E-0D78-3918-9798DE2F36FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-build-your-kernel", "01-build-your-kernel", "{A09DD9E2-96AB-02FA-8131-0D9C9BAF89D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kernel", "day-2\Labfiles\01-build-your-kernel\C-sharp\Kernel.csproj", "{2707D497-8183-51DB-FDFF-2FCE9FD2E560}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kernel", "part-2\Labfiles\01-build-your-kernel\C-sharp\Kernel.csproj", "{2707D497-8183-51DB-FDFF-2FCE9FD2E560}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-run-prompts", "02-run-prompts", "{399B391D-C591-59F4-1840-1923ED51A9BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prompts", "day-2\Labfiles\02-run-prompts\C-sharp\Prompts.csproj", "{A04D61A6-1914-FB33-3252-21A92D1B5D66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prompts", "part-2\Labfiles\02-run-prompts\C-sharp\Prompts.csproj", "{A04D61A6-1914-FB33-3252-21A92D1B5D66}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LabFiles", "LabFiles", "{BF5CDA97-ACAD-4B33-69CD-71748599F103}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "chat-app", "chat-app", "{773D4D7A-33D4-4161-70E2-BBCADB6D263A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp", "day-1\LabFiles\chat-app\csharp\ChatApp.csproj", "{41711F83-2BFA-7F2E-1887-532D1A03B365}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp", "part-1\LabFiles\chat-app\csharp\ChatApp.csproj", "{41711F83-2BFA-7F2E-1887-532D1A03B365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
