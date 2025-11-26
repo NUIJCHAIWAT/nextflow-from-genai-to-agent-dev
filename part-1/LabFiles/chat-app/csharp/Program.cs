@@ -1,5 +1,9 @@
 // Add references
-
+using System.Text;
+using Azure.AI.OpenAI;
+using Azure.AI.Projects;
+using Azure.Identity;
+using OpenAI.Chat;
 
 const string EnvFileName = ".env";
 
@@ -25,12 +29,24 @@ try
     }
 
     // Initialize the project client
-    
+    var projectClient = new AIProjectClient(
+        new Uri(endpoint),
+        new DefaultAzureCredential(new DefaultAzureCredentialOptions
+        {
+            ExcludeEnvironmentCredential = true,
+            ExcludeManagedIdentityCredential = true
+        }));
 
     // Get the Azure OpenAI client and chat client for the deployment
+    var openAIClient = projectClient.GetOpenAIClient(apiVersion: "2024-10-21");
+    var chatClient = openAIClient.GetChatClient(modelDeployment);
     
 
     // Initialize prompt with system message
+    var conversation = new List<ChatMessage>
+    {
+        new SystemChatMessage("You are a helpful AI assistant that answers questions.")
+    };       
     
 
     // Loop until the user types 'quit'
@@ -56,6 +72,20 @@ try
         }
 
         // Get a chat completion
+        conversation.Add(new UserChatMessage(inputText));
+
+        var chatCompletion = await chatClient.CompleteChatAsync(
+            conversation,
+            new ChatCompletionOptions
+            {
+                Temperature = 0.8f
+            });
+
+        var completionText = ExtractContentText(chatCompletion);
+
+        Console.WriteLine($"\nAssistant: {completionText}\n");
+
+        conversation.Add(new AssistantChatMessage(completionText));
         
     }
 }
